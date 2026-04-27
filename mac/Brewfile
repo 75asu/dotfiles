@@ -1,0 +1,31 @@
+tap "hashicorp/tap"
+
+# Shell
+brew "fzf"
+brew "tmux"
+brew "starship"
+
+# Git
+brew "git-filter-repo"
+
+# Infra
+brew "ansible"
+brew "helm"
+brew "kubernetes-cli"
+brew "kubie"
+brew "k9s"
+brew "hashicorp/tap/terraform"
+
+# Dev
+brew "go"
+brew "jq"
+brew "tree"
+brew "htop"
+brew "watch"
+brew "wget"
+
+# Site
+brew "hugo"
+
+# Mac apps
+cask "orbstack"

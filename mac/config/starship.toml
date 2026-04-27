@@ -1,0 +1,80 @@
+# ~/.config/starship.toml
+
+
+[username]
+format = '[$user](#f87002) '
+disabled = false
+show_always = true
+
+
+[directory]
+format = '[$path](#FF00AA)[$read_only]($read_only_style) '
+truncation_length = 3
+
+[character]
+
+success_symbol = '[└─▶▶▶](#00FF1E) '
+error_symbol = '[└─✘✘✘](#FF0000) '
+vimcmd_symbol = "[<](bold green)"
+
+
+[cmd_duration]
+min_time = 500
+format = '[took $duration](cyan)'
+
+[container]
+format = '[$symbol \[$name\]]($style) '
+
+[git_branch]
+symbol = '🌱'
+format = '[$symbol$branch(:$remote_branch)](227)'
+
+[git_commit]
+commit_hash_length = 4
+tag_symbol = '🔖 '
+
+[git_state]
+format = '[\($state( $progress_current of $progress_total)\)]($style) '
+cherry_pick = '[🍒 PICKING](bold red)'
+
+[git_metrics]
+added_style = 'bold red'
+format = '[+$added]($added_style)/[-$deleted]($deleted_style) '
+
+[git_status]
+conflicted = '✖'
+ahead = '➤'
+behind = '⬅'
+diverged = '⇅'
+up_to_date = '✔'
+untracked = '?'
+stashed = '⏏'
+modified = '✎'
+staged = '→'
+renamed = '⇌'
+deleted = '🗑'
+
+[kubernetes]
+format = '''
+[⎈ | $namespace | $cluster ](#33FFD4)
+'''
+disabled = false
+
+
+
+[nodejs]
+disabled = true
+
+[golang]
+disabled = true
+
+[python]
+disabled = true
+
+[package]
+disabled = true
+
+[gcloud]
+disabled = true
+
+

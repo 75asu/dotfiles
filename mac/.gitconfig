@@ -1,0 +1,22 @@
+[user]
+	name = Asutosh Panda
+	email = asutosh.pda@gmail.com
+
+[core]
+	editor = vim
+	autocrlf = input
+
+[init]
+	defaultBranch = main
+
+[push]
+	autoSetupRemote = true
+
+[pull]
+	rebase = false
+
+[alias]
+	st = status
+	co = checkout
+	br = branch
+	lg = log --oneline --graph --decorate --all

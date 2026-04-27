@@ -1,26 +1,45 @@
-- to setup vim - `curl http://j.mp/spf13-vim3 -L -o - | sh`
-- to setup lazyvim -
+# dotfiles
 
-  ```shell
-  # required
-  mv ~/.config/nvim{,.bak}
-  
-  # optional but recommended
-  mv ~/.local/share/nvim{,.bak}
-  mv ~/.local/state/nvim{,.bak}
-  mv ~/.cache/nvim{,.bak}
+Personal dotfiles for Mac and Linux. No magic, no conditionals - pick your machine and run one script.
 
-  git clone https://github.com/LazyVim/starter ~/.config/nvim
+## Mac
 
-  rm -rf ~/.config/nvim/.git
+```bash
+git clone https://github.com/75asu/dotfiles ~/dotfiles
+cd ~/dotfiles
+./mac-install.sh
+exec zsh
+```
 
-  nvim
-  ```
-- to install starship - `curl -sS https://starship.rs/install.sh | sh`
-- to configure starship
-  ```shell
-  # create the toml file
-  vi ~/.config/starship.toml
+Requires Homebrew to be installed first: https://brew.sh
 
-  # add the content of starship.toml from this repo
-  ```
+## Linux (Ubuntu/Debian)
+
+```bash
+git clone https://github.com/75asu/dotfiles ~/dotfiles
+cd ~/dotfiles
+./linux-install.sh
+exec zsh
+```
+
+## What's inside
+
+| File | Where it lands |
+|------|---------------|
+| `.zshrc` | `~/.zshrc` |
+| `.zprofile` | `~/.zprofile` (Mac only) |
+| `.gitconfig` | `~/.gitconfig` |
+| `.tmux.conf` | `~/.tmux.conf` |
+| `aliases.zsh` | `~/.aliases.zsh` |
+| `config/starship.toml` | `~/.config/starship.toml` |
+| `Brewfile` | used by `brew bundle` (Mac only) |
+
+All files are symlinked, not copied. Edit in this repo, changes take effect immediately.
+
+## Updating an existing machine
+
+```bash
+cd ~/dotfiles
+git pull
+./mac-install.sh   # or linux-install.sh - safe to re-run
+```
