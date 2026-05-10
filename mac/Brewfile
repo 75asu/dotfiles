@@ -3,29 +3,38 @@ tap "hashicorp/tap"
 # Shell
 brew "fzf"
 brew "tmux"
-brew "starship"
 
 # Git
 brew "git-filter-repo"
+brew "gh"
 
 # Infra
 brew "ansible"
 brew "helm"
+brew "helmfile"
 brew "kubernetes-cli"
 brew "kubie"
-brew "k9s"
+brew "minikube"
 brew "hashicorp/tap/terraform"
+brew "terragrunt"
 
 # Dev
 brew "go"
+brew "goenv"
+brew "golangci-lint"
+brew "hadolint"
 brew "jq"
+brew "ripgrep"
 brew "tree"
-brew "htop"
-brew "watch"
-brew "wget"
 
 # Site
 brew "hugo"
 
+# Fonts
+cask "font-fira-code"
+cask "font-jetbrains-mono"
+
 # Mac apps
+cask "hashicorp-vagrant"
 cask "orbstack"
+cask "utm"

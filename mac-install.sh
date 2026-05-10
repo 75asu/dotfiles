@@ -27,5 +27,8 @@ ln -sf "$DOTFILES/aliases.zsh"         "$HOME/.aliases.zsh"
 mkdir -p "$HOME/.config"
 ln -sf "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
 
+echo "==> Installing npm globals..."
+npm install -g @openai/codex
+
 echo ""
 echo "Done. Run: exec zsh"
