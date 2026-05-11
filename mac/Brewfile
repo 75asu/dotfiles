@@ -2,6 +2,7 @@ tap "hashicorp/tap"
 
 # Shell
 brew "fzf"
+brew "starship"
 brew "tmux"
 
 # Git
@@ -10,11 +11,14 @@ brew "gh"
 
 # Infra
 brew "ansible"
+brew "age"
 brew "helm"
 brew "helmfile"
+brew "k3sup"
 brew "kubernetes-cli"
 brew "kubie"
 brew "minikube"
+brew "sops"
 brew "hashicorp/tap/terraform"
 brew "terragrunt"
 
@@ -37,4 +41,6 @@ cask "font-jetbrains-mono"
 # Mac apps
 cask "hashicorp-vagrant"
 cask "orbstack"
+cask "stats"
 cask "utm"
+cask "visual-studio-code"
