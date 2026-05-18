@@ -18,13 +18,23 @@
     "redhat.telemetry.enabled": false,
     "editor.minimap.enabled": false,
     "gopls": {},
+    "go.toolsEnvVars": {
+        "GOOS": "linux",
+        "GOARCH": "amd64"
+    },
+    "go.goroot": "/Users/airasu/.goenv/versions/1.26.2",
+    "terminal.integrated.env.osx": {
+        "PATH": "/Users/airasu/.goenv/shims:/Users/airasu/.goenv/bin:${env:PATH}"
+    },
+    "git.alwaysSignOff": true,
     "go.toolsManagement.autoUpdate": true,
     "terminal.integrated.defaultProfile.windows": "Git Bash",
     "files.autoSave": "afterDelay",
     "liveServer.settings.donotShowInfoMsg": true,
     "editor.fontSize": 15,
     "terminal.integrated.fontSize": 15,
-    "terminal.integrated.fontFamily": "Fira Code",
+    "terminal.integrated.fontFamily": "JetBrains Mono, Menlo, monospace",
+    "terminal.integrated.gpuAcceleration": "canvas",
     "makefile.configureOnOpen": true,
     "sqltools.formatLanguages": ["sql"],
     "[sql]": {
@@ -46,6 +56,5 @@
         "list.inactiveSelectionForeground": "#a9b1d6",
         "list.hoverForeground": "#c0caf5",
         "list.hoverBackground": "#1a1b2e"
-    },
-    "git.alwaysSignOff": true
+    }
 }
