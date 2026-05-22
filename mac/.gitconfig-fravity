@@ -1,0 +1,9 @@
+[user]
+	name = Asutosh Panda
+	email = apanda@fravity.ai
+
+[github]
+	user = fravity-asu
+
+[core]
+	sshCommand = ssh -i ~/.ssh/id_ed25519_fravityasu -F ~/.ssh/config

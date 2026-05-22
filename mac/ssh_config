@@ -1,0 +1,35 @@
+# Added by OrbStack: 'orb' SSH host for Linux machines
+# This only works if it's at the top of ssh_config (before any Host blocks).
+# This won't be added again if you remove it.
+Include ~/.orbstack/ssh/config
+
+# github.com — personal (75asu)
+# Key: ~/.ssh/id_ed25519
+# Generate: ssh-keygen -t ed25519 -C "75asu@github" -f ~/.ssh/id_ed25519
+Host github-75asu
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519
+
+# github.com — work (asuu26 / one2nc)
+# Key: ~/.ssh/id_ed25519_asuu26
+# Generate: ssh-keygen -t ed25519 -C "asuu26@github" -f ~/.ssh/id_ed25519_asuu26
+Host github-asuu26
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_asuu26
+
+# github.com — client (fravity-asu)
+# Key: ~/.ssh/id_ed25519_fravityasu
+# Generate: ssh-keygen -t ed25519 -C "fravity-asu@github" -f ~/.ssh/id_ed25519_fravityasu
+Host github-fravityasu
+    HostName github.com
+    User git
+    IdentityFile ~/.ssh/id_ed25519_fravityasu
+
+Host homelab
+    HostName 100.64.11.64
+    User phoenix-admin
+    IdentityFile ~/.ssh/id_ed25519
+    ServerAliveInterval 60
+    ServerAliveCountMax 3

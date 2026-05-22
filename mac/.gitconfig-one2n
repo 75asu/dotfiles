@@ -1,0 +1,9 @@
+[user]
+	name = Asutosh Panda
+	email = asutosh.panda@one2n.in
+
+[github]
+	user = asuu26
+
+[core]
+	sshCommand = ssh -i ~/.ssh/id_ed25519_asuu26 -F ~/.ssh/config

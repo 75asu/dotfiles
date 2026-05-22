@@ -20,3 +20,12 @@
 	co = checkout
 	br = branch
 	lg = log --oneline --graph --decorate --all
+
+[includeIf "gitdir:~/Documents/75asu/gh-clones-personal/"]
+	path = ~/.gitconfig-personal
+
+[includeIf "gitdir:~/Documents/75asu/gh-clones-one2n/"]
+	path = ~/.gitconfig-one2n
+
+[includeIf "gitdir:~/Documents/75asu/gh-clones-fravityai/"]
+	path = ~/.gitconfig-fravity
