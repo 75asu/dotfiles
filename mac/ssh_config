@@ -10,6 +10,7 @@ Host github-75asu
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519
+    IdentitiesOnly yes
 
 # github.com — work (asuu26 / one2nc)
 # Key: ~/.ssh/id_ed25519_asuu26
@@ -18,6 +19,7 @@ Host github-asuu26
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_asuu26
+    IdentitiesOnly yes
 
 # github.com — client (fravity-asu)
 # Key: ~/.ssh/id_ed25519_fravityasu
@@ -26,6 +28,7 @@ Host github-fravityasu
     HostName github.com
     User git
     IdentityFile ~/.ssh/id_ed25519_fravityasu
+    IdentitiesOnly yes
 
 Host homelab
     HostName 100.64.11.64
