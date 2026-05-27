@@ -4,12 +4,12 @@
 Include ~/.orbstack/ssh/config
 
 # github.com — personal (75asu)
-# Key: ~/.ssh/id_ed25519
-# Generate: ssh-keygen -t ed25519 -C "75asu@github" -f ~/.ssh/id_ed25519
+# Key: ~/.ssh/id_ed25519_75asu
+# Generate: ssh-keygen -t ed25519 -C "75asu@github" -f ~/.ssh/id_ed25519_75asu
 Host github-75asu
     HostName github.com
     User git
-    IdentityFile ~/.ssh/id_ed25519
+    IdentityFile ~/.ssh/id_ed25519_75asu
     IdentitiesOnly yes
 
 # github.com — work (asuu26 / one2nc)
