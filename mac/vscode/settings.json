@@ -22,9 +22,9 @@
         "GOOS": "linux",
         "GOARCH": "amd64"
     },
-    "go.goroot": "/Users/airasu/.goenv/versions/1.26.2",
+    "go.goroot": "/opt/homebrew/Cellar/go/1.26.3/libexec",
     "terminal.integrated.env.osx": {
-        "PATH": "/Users/airasu/.goenv/shims:/Users/airasu/.goenv/bin:${env:PATH}"
+        "PATH": "/opt/homebrew/bin:/opt/homebrew/sbin:${env:PATH}"
     },
     "git.alwaysSignOff": true,
     "go.toolsManagement.autoUpdate": true,
@@ -36,7 +36,9 @@
     "terminal.integrated.fontFamily": "JetBrains Mono, Menlo, monospace",
     "terminal.integrated.gpuAcceleration": "canvas",
     "makefile.configureOnOpen": true,
-    "sqltools.formatLanguages": ["sql"],
+    "sqltools.formatLanguages": [
+        "sql"
+    ],
     "[sql]": {
         "editor.formatOnSave": true,
         "editor.defaultFormatter": "mtxr.sqltools"
@@ -56,5 +58,6 @@
         "list.inactiveSelectionForeground": "#a9b1d6",
         "list.hoverForeground": "#c0caf5",
         "list.hoverBackground": "#1a1b2e"
-    }
+    },
+    "terminal.integrated.mouseWheelScrollSensitivity": 3
 }
