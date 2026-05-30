@@ -1,26 +1,55 @@
 # ~/.config/starship.toml
 
+# Left-side prompt format -- explicit order so we control placement.
+# Right-side prompt -- exit code, cmd duration, time. Keeps main line tight.
+format = """\
+$os\
+$username\
+$custom\
+$directory\
+$git_branch\
+$git_commit\
+$git_state\
+$git_status\
+$git_metrics\
+$aws\
+$gcloud\
+$terraform\
+$container\
+$kubernetes\
+$character"""
+
+right_format = """\
+$status\
+$cmd_duration\
+$time\
+"""
+
+[os]
+disabled = false
+format = '[$symbol]($style)'
+style = 'bold white'
+
+[os.symbols]
+Macos = '🍎 '
 
 [username]
 format = '[$user](#f87002) '
 disabled = false
 show_always = true
 
-
 [directory]
 format = '[$path](#FF00AA)[$read_only]($read_only_style) '
 truncation_length = 3
 
 [character]
-
 success_symbol = '[└─▶▶▶](#00FF1E) '
 error_symbol = '[└─✘✘✘](#FF0000) '
 vimcmd_symbol = "[<](bold green)"
 
-
 [cmd_duration]
 min_time = 500
-format = '[took $duration](cyan)'
+format = '[took $duration ](cyan)'
 
 [container]
 format = '[$symbol \[$name\]]($style) '
@@ -56,11 +85,47 @@ deleted = '🗑'
 
 [kubernetes]
 format = '''
-[⎈ | $namespace | $cluster ](#33FFD4)
-'''
+[⎈ | $context | $namespace ](#33FFD4)'''
 disabled = false
 
+# Cloud account indicators -- show which AWS/GCP/TF target you're aimed at.
+# Critical for multi-account workflows (Fravity has 5+ AWS accounts).
 
+[aws]
+disabled = false
+format = '[$symbol$profile(\($region\))]($style) '
+symbol = 'aws:'
+style = 'bold #FF9900'
+force_display = true
+
+[gcloud]
+disabled = false
+format = '[($symbol$project)]($style) '
+symbol = 'gcp:'
+style = 'bold #4285F4'
+
+[terraform]
+disabled = false
+format = '[($symbol$workspace)]($style) '
+symbol = 'tf:'
+style = 'bold #844FBA'
+
+# Right-side modules
+
+[status]
+disabled = false
+format = '[ ✘ $status]($style) '
+success_symbol = ''
+style = 'bold red'
+recognize_signal_code = true
+
+[time]
+disabled = false
+format = '[\[$time\]]($style)'
+time_format = '%H:%M'
+style = 'dimmed white'
+
+# Disabled language modules (kept for clarity)
 
 [nodejs]
 disabled = true
@@ -73,10 +138,6 @@ disabled = true
 
 [package]
 disabled = true
-
-[gcloud]
-disabled = true
-
 
 # Active gh CLI account -- one of three, color-coded for instant recognition.
 # Reads ~/.config/gh/hosts.yml (the active user is the `user:` line).
@@ -99,5 +160,3 @@ command = "echo '@fravity-asu'"
 when = 'grep -qE "^    user: fravity-asu$" ~/.config/gh/hosts.yml 2>/dev/null'
 format = '[$output](#33FF77) '
 shell = ["bash", "--noprofile", "--norc"]
-
-
