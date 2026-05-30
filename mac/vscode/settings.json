@@ -59,5 +59,6 @@
         "list.hoverForeground": "#c0caf5",
         "list.hoverBackground": "#1a1b2e"
     },
-    "terminal.integrated.mouseWheelScrollSensitivity": 3
+    "terminal.integrated.mouseWheelScrollSensitivity": 3,
+    "update.showReleaseNotes": false
 }
