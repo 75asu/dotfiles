@@ -16,7 +16,7 @@ $aws\
 $gcloud\
 $terraform\
 $container\
-$kubernetes\
+$kubernetes
 $character"""
 
 right_format = """\
