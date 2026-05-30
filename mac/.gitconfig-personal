@@ -6,4 +6,4 @@
 	user = 75asu
 
 [core]
-	sshCommand = ssh -i ~/.ssh/id_ed25519 -F ~/.ssh/config
+	sshCommand = ssh -i ~/.ssh/id_ed25519_75asu -F ~/.ssh/config
