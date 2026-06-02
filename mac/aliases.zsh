@@ -14,6 +14,25 @@ alias gl='git log --oneline --graph --decorate'
 alias gst='git stash'
 alias gstp='git stash pop'
 
+# GitHub CLI -- per-folder account, mirrors git's includeIf in ~/.gitconfig.
+# Resolves the gh account from the current folder and injects its token for that
+# single invocation only. Stateless and tab-independent: never runs `gh auth switch`,
+# so two terminals in different gh-clones folders use different accounts at once.
+# Outside ~/gh-clones/** it falls back to gh's globally active account.
+gh() {
+  local u=""
+  case "$PWD/" in
+    "$HOME/gh-clones/gh-clones-personal/"*)  u="75asu" ;;
+    "$HOME/gh-clones/gh-clones-fravityai/"*) u="fravity-asu" ;;
+    "$HOME/gh-clones/gh-clones-one2n/"*)     u="asuu26" ;;
+  esac
+  if [[ -n "$u" ]]; then
+    GH_TOKEN="$(command gh auth token -u "$u" 2>/dev/null)" command gh "$@"
+  else
+    command gh "$@"
+  fi
+}
+
 # Kubernetes
 alias k='kubectl'
 alias kgp='kubectl get pods'
