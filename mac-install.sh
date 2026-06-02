@@ -1,98 +1,132 @@
 #!/usr/bin/env bash
-set -e
+# Idempotent mac setup. Safe to re-run: it reports what was already correct
+# (ok), newly created (linked), or repaired (fixed). For a read-only drift
+# check without changing anything, use mac-doctor.sh instead.
+#
+# Usage:
+#   ./mac-install.sh              full setup (packages + links + keys + gh check)
+#   ./mac-install.sh --links-only just re-link dotfiles + ssh + keys (skip brew/omz/nvm/npm)
+set -euo pipefail
 
-DOTFILES="$(cd "$(dirname "$0")/mac" && pwd)"
+ROOT="$(cd "$(dirname "$0")" && pwd)"
+source "$ROOT/mac/manifest.sh"
+DOTFILES="$DOTFILES_MAC"
 
-echo "==> Installing Homebrew packages..."
-brew bundle --file="$DOTFILES/Brewfile"
+LINKS_ONLY=0
+[ "${1:-}" = "--links-only" ] && LINKS_ONLY=1
 
-echo "==> Installing oh-my-zsh..."
-if [ ! -d "$HOME/.oh-my-zsh" ]; then
-  sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+tilde() { echo "${1/#$HOME/~}"; }
+
+# Idempotent symlink: ok if already correct, fixed if wrong/real-file (backed up), linked if new.
+link() {
+  local src="$1" dest="$2"
+  mkdir -p "$(dirname "$dest")"
+  if [ -L "$dest" ]; then
+    if [ "$(readlink "$dest")" = "$src" ]; then
+      echo "  ok:     $(tilde "$dest")"; return
+    fi
+    local old; old="$(readlink "$dest")"
+    rm "$dest"; ln -s "$src" "$dest"
+    echo "  fixed:  $(tilde "$dest") (was -> $old)"
+  elif [ -e "$dest" ]; then
+    local bak="$dest.bak.$(date +%Y%m%d%H%M%S)"
+    mv "$dest" "$bak"; ln -s "$src" "$dest"
+    echo "  fixed:  $(tilde "$dest") (real file backed up to $(tilde "$bak"))"
+  else
+    ln -s "$src" "$dest"; echo "  linked: $(tilde "$dest")"
+  fi
+}
+
+if [ "$LINKS_ONLY" -eq 0 ]; then
+  echo "==> Installing Homebrew packages..."
+  brew bundle --file="$DOTFILES/Brewfile"
+
+  echo "==> Installing oh-my-zsh..."
+  if [ ! -d "$HOME/.oh-my-zsh" ]; then
+    sh -c "$(curl -fsSL https://raw.github.com/ohmyzsh/ohmyzsh/master/tools/install.sh)" "" --unattended
+  fi
+
+  echo "==> Installing zsh plugins..."
+  ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
+  [ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] && \
+    git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions" || true
+  [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] && \
+    git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" || true
+  [ ! -d "$ZSH_CUSTOM/plugins/zsh-history-substring-search" ] && \
+    git clone https://github.com/zsh-users/zsh-history-substring-search "$ZSH_CUSTOM/plugins/zsh-history-substring-search" || true
+
+  echo "==> Installing nvm..."
+  if [ ! -d "$HOME/.nvm" ]; then
+    curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+  fi
+  export NVM_DIR="$HOME/.nvm"
+  # shellcheck disable=SC1091
+  [ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+  nvm install --lts
+  nvm alias default node
+
+  echo "==> Installing npm globals..."
+  npm install -g @openai/codex
 fi
-
-echo "==> Installing zsh plugins..."
-ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
-[ ! -d "$ZSH_CUSTOM/plugins/zsh-autosuggestions" ] && \
-  git clone https://github.com/zsh-users/zsh-autosuggestions "$ZSH_CUSTOM/plugins/zsh-autosuggestions"
-[ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] && \
-  git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
-[ ! -d "$ZSH_CUSTOM/plugins/zsh-history-substring-search" ] && \
-  git clone https://github.com/zsh-users/zsh-history-substring-search "$ZSH_CUSTOM/plugins/zsh-history-substring-search"
-
-echo "==> Installing nvm..."
-if [ ! -d "$HOME/.nvm" ]; then
-  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
-fi
-export NVM_DIR="$HOME/.nvm"
-[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
-nvm install --lts
-nvm alias default node
-
-echo "==> Installing npm globals..."
-npm install -g @openai/codex
 
 echo "==> Linking dotfiles..."
-ln -sf "$DOTFILES/.zshrc"              "$HOME/.zshrc"
-ln -sf "$DOTFILES/.zprofile"           "$HOME/.zprofile"
-ln -sf "$DOTFILES/.gitconfig"          "$HOME/.gitconfig"
-ln -sf "$DOTFILES/.gitconfig-personal" "$HOME/.gitconfig-personal"
-ln -sf "$DOTFILES/.gitconfig-one2n"    "$HOME/.gitconfig-one2n"
-ln -sf "$DOTFILES/.gitconfig-fravity"  "$HOME/.gitconfig-fravity"
-ln -sf "$DOTFILES/.tmux.conf"          "$HOME/.tmux.conf"
-ln -sf "$DOTFILES/aliases.zsh"         "$HOME/.aliases.zsh"
-mkdir -p "$HOME/.config"
-ln -sf "$DOTFILES/config/starship.toml" "$HOME/.config/starship.toml"
+for entry in "${DOTFILE_LINKS[@]}"; do
+  link "$DOTFILES/${entry%%|*}" "${entry#*|}"
+done
+chmod 700 "$HOME/.ssh" 2>/dev/null || true
+chmod 600 "$HOME/.ssh/config" 2>/dev/null || true
 
-echo "==> Setting up SSH config and keys..."
-mkdir -p "$HOME/.ssh"
-chmod 700 "$HOME/.ssh"
-ln -sf "$DOTFILES/ssh_config" "$HOME/.ssh/config"
-chmod 600 "$HOME/.ssh/config"
-
-declare -A GITHUB_KEYS=(
-  ["id_ed25519"]="75asu@github"
-  ["id_ed25519_asuu26"]="asuu26@github"
-  ["id_ed25519_fravityasu"]="fravity-asu@github"
-)
-KEYS_TO_ADD=()
-for keyfile in "${!GITHUB_KEYS[@]}"; do
-  comment="${GITHUB_KEYS[$keyfile]}"
+echo "==> GitHub SSH keys..."
+NEW_KEYS=()
+for acct in "${GH_ACCOUNTS[@]}"; do
+  IFS='|' read -r folder user keyfile alias email <<<"$acct"
   if [ ! -f "$HOME/.ssh/$keyfile" ]; then
-    ssh-keygen -t ed25519 -C "$comment" -f "$HOME/.ssh/$keyfile" -N ""
-    echo "  generated: $keyfile"
-    KEYS_TO_ADD+=("$keyfile")
+    ssh-keygen -t ed25519 -C "$user@github" -f "$HOME/.ssh/$keyfile" -N "" -q
+    echo "  generated: $keyfile ($user)"
+    NEW_KEYS+=("$keyfile|$user")
   else
-    echo "  exists:    $keyfile (skipped)"
+    echo "  ok:        $keyfile ($user)"
   fi
 done
-
-if [ ${#KEYS_TO_ADD[@]} -gt 0 ]; then
+if [ ${#NEW_KEYS[@]} -gt 0 ]; then
   echo ""
-  echo "  New keys generated — add these public keys to GitHub before testing:"
-  for keyfile in "${KEYS_TO_ADD[@]}"; do
+  echo "  New keys generated -- add each public key to the matching GitHub account:"
+  for entry in "${NEW_KEYS[@]}"; do
+    keyfile="${entry%%|*}"; user="${entry#*|}"
     echo ""
-    echo "  --- $keyfile (${GITHUB_KEYS[$keyfile]}) ---"
+    echo "  --- $keyfile (account: $user) ---"
     cat "$HOME/.ssh/$keyfile.pub"
   done
   echo ""
-  echo "  Test with: ssh -T github-75asu && ssh -T github-asuu26 && ssh -T github-fravityasu"
-else
-  echo "  All keys already present."
+  echo "  Add at: https://github.com/settings/keys (logged in as each account)"
 fi
 
-echo "==> Setting up VSCode..."
-VSCODE_USER="$HOME/Library/Application Support/Code/User"
-mkdir -p "$VSCODE_USER"
-ln -sf "$DOTFILES/vscode/settings.json" "$VSCODE_USER/settings.json"
-if command -v code &>/dev/null; then
-  while IFS= read -r ext; do
-    [[ -z "$ext" ]] && continue
-    code --install-extension "$ext" --force 2>/dev/null || echo "  skipped: $ext"
-  done < "$DOTFILES/vscode/extensions.txt"
+echo "==> gh CLI auth..."
+if command -v gh >/dev/null 2>&1; then
+  status="$(gh auth status 2>&1 || true)"
+  for acct in "${GH_ACCOUNTS[@]}"; do
+    IFS='|' read -r folder user keyfile alias email <<<"$acct"
+    if echo "$status" | grep -q "account $user"; then
+      echo "  ok:     gh authed as $user"
+    else
+      echo "  todo:   gh NOT authed as $user -- run: gh auth login --hostname github.com --git-protocol ssh   (sign in as $user)"
+    fi
+  done
 else
-  echo "  'code' CLI not in PATH - open VSCode, run: Shell Command: Install 'code' command in PATH, then re-run this script"
+  echo "  gh not installed (brew bundle installs it; re-run without --links-only)"
+fi
+
+if [ "$LINKS_ONLY" -eq 0 ]; then
+  echo "==> VSCode extensions..."
+  if command -v code >/dev/null 2>&1; then
+    while IFS= read -r ext; do
+      [ -z "$ext" ] && continue
+      code --install-extension "$ext" --force >/dev/null 2>&1 || echo "  skipped: $ext"
+    done < "$DOTFILES/vscode/extensions.txt"
+  else
+    echo "  'code' CLI not in PATH -- open VSCode, run Shell Command: Install 'code' command, then re-run"
+  fi
 fi
 
 echo ""
-echo "Done. Run: exec zsh"
+echo "Done. Verify with: $ROOT/mac-doctor.sh    then: exec zsh"
