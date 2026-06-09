@@ -42,6 +42,20 @@ ZSH_CUSTOM="${ZSH_CUSTOM:-$HOME/.oh-my-zsh/custom}"
 [ ! -d "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting" ] && \
   git clone https://github.com/zsh-users/zsh-syntax-highlighting "$ZSH_CUSTOM/plugins/zsh-syntax-highlighting"
 
+echo "==> Installing nvm + Node LTS (for webfetch)..."
+if [ ! -d "$HOME/.nvm" ]; then
+  curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.1/install.sh | bash
+fi
+export NVM_DIR="$HOME/.nvm"
+# shellcheck disable=SC1091
+[ -s "$NVM_DIR/nvm.sh" ] && \. "$NVM_DIR/nvm.sh"
+nvm install --lts && nvm alias default node
+
+echo "==> Installing webfetch (headless-Chromium page -> markdown)..."
+( cd "$DOTFILES/../tools/webfetch" && npm ci && npx --yes playwright install --with-deps chromium )
+mkdir -p "$HOME/.local/bin"
+ln -sf "$DOTFILES/../tools/webfetch/webfetch" "$HOME/.local/bin/webfetch"
+
 echo "==> Linking dotfiles..."
 ln -sf "$DOTFILES/.zshrc"               "$HOME/.zshrc"
 ln -sf "$DOTFILES/.gitconfig"           "$HOME/.gitconfig"

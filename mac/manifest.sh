@@ -26,6 +26,7 @@ DOTFILE_LINKS=(
   "config/starship.toml|$HOME/.config/starship.toml"
   "ssh_config|$HOME/.ssh/config"
   "vscode/settings.json|$HOME/Library/Application Support/Code/User/settings.json"
+  "../tools/webfetch/webfetch|$HOME/.local/bin/webfetch"
 )
 
 # GitHub accounts: "<folder>|<github user>|<ssh key file>|<ssh host alias>|<email>"

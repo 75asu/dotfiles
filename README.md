@@ -35,8 +35,16 @@ exec zsh
 | `ssh_config` | `~/.ssh/config` (Mac) |
 | `vscode/settings.json` | VSCode user settings (Mac) |
 | `Brewfile` | used by `brew bundle` (Mac only) |
+| `tools/webfetch/` | `webfetch` CLI on `~/.local/bin` -- headless-Chromium renders any page (incl. JS SPAs) to clean markdown, fully local, no API key |
 
 All files are symlinked, not copied. Edit in this repo, changes take effect immediately.
+
+## webfetch
+
+`webfetch <url>` renders a page with headless Chromium (Playwright) and prints clean
+markdown -- the local, OSS, no-API-key way to read JS-heavy pages a plain `curl` can't.
+Installed by the setup scripts (`npm ci` + `playwright install chromium`). See
+[`tools/webfetch/README.md`](tools/webfetch/README.md).
 
 The Mac symlink map and the GitHub-account table (folder -> user -> SSH key -> alias) live in `mac/manifest.sh`, which both `mac-install.sh` and `mac-doctor.sh` read, so apply and verify can never disagree.
 

@@ -67,6 +67,9 @@ if [ "$LINKS_ONLY" -eq 0 ]; then
 
   echo "==> Installing npm globals..."
   npm install -g @openai/codex
+
+  echo "==> Installing webfetch (headless-Chromium page -> markdown)..."
+  ( cd "$ROOT/tools/webfetch" && npm ci --no-fund --no-audit && npx --yes playwright install chromium )
 fi
 
 echo "==> Linking dotfiles..."
